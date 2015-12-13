@@ -8,6 +8,8 @@ When building very large applications, enabling `BSLS_ASSERT_SAFE` causes the te
 
 On my mac, the overhead for a single (unoptimized) `BSLS_ASSERT_SAFE` appears to be about 80 bytes (going from 32 bytes for an empty function with an int argument, to 112 bytes for the same function with an assert).
 
+If we make `BSLS_ASSERT_SAFE` a function call instead of a macro, the overhead appears to drop to 96 bytes - not a huge win over the "macro" version.
+
 Here's the empty function and its disassembly:
 
 ```C++
@@ -77,6 +79,48 @@ bool emptyFunctionWithTrivialAssert(int argc)
       87:       c3                      ret
       88:       0f 1f 84 00 00 00 00    nopl   0x0(%eax,%eax,1)
       8f:       00
+}
+```
+
+Finally, here's the function with the function-call version of `bsls_assert_safe`:
+
+```C++
+000000c0 <__Z33emptyFunctionWithTrivialOutOfLinei>:
+
+bool emptyFunctionWithTrivialOutOfLine(int argc)
+{
+      c0:       55                      push   %ebp
+      c1:       89 e5                   mov    %esp,%ebp
+      c3:       56                      push   %esi
+      c4:       83 ec 14                sub    $0x14,%esp
+      c7:       e8 00 00 00 00          call   cc <__Z33emptyFunctionWithTrivialOutOfLinei+0xc>
+      cc:       58                      pop    %eax
+      cd:       8b 4d 08                mov    0x8(%ebp),%ecx
+      d0:       89 4d f8                mov    %ecx,-0x8(%ebp)
+    bsls_assert_safe(argc > 1, "argc > 1", __LINE__, __FILE__);
+      d3:       81 7d f8 01 00 00 00    cmpl   $0x1,-0x8(%ebp)
+      da:       0f 9f c2                setg   %dl
+      dd:       8d 88 07 47 03 00       lea    0x34707(%eax),%ecx
+      e3:       89 e6                   mov    %esp,%esi
+      e5:       89 4e 0c                mov    %ecx,0xc(%esi)
+      e8:       8d 80 fe 46 03 00       lea    0x346fe(%eax),%eax
+      ee:       89 46 04                mov    %eax,0x4(%esi)
+      f1:       0f b6 c2                movzbl %dl,%eax
+      f4:       83 e0 01                and    $0x1,%eax
+      f7:       89 06                   mov    %eax,(%esi)
+      f9:       c7 46 08 31 00 00 00    movl   $0x31,0x8(%esi)
+     100:       e8 fb fe ff ff          call   0 <__Z16bsls_assert_safebPKciS0_>
+
+    return argc > 1;
+     105:       81 7d f8 01 00 00 00    cmpl   $0x1,-0x8(%ebp)
+     10c:       0f 9f c2                setg   %dl
+     10f:       80 e2 01                and    $0x1,%dl
+     112:       0f b6 c2                movzbl %dl,%eax
+     115:       83 c4 14                add    $0x14,%esp
+     118:       5e                      pop    %esi
+     119:       5d                      pop    %ebp
+     11a:       c3                      ret
+     11b:       0f 1f 44 00 00          nopl   0x0(%eax,%eax,1)
 }
 ```
 
