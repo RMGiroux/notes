@@ -6,7 +6,7 @@ When building very large applications, enabling `BSLS_ASSERT_SAFE` causes the te
 
 ##Background numbers
 
-On my mac, the overhead for a single `BSLS_ASSERT_SAFE` appears to be about 80 bytes (going from 32 bytes for an empty function with an int argument, to 112 bytes for the same function with an assert).
+On my mac, the overhead for a single (unoptimized) `BSLS_ASSERT_SAFE` appears to be about 80 bytes (going from 32 bytes for an empty function with an int argument, to 112 bytes for the same function with an assert).
 
 Here's the empty function and its disassembly:
 
@@ -87,6 +87,8 @@ There are several different ways we can seek to address this problem.
 ####Make More Methods in Commonly Used Components Out-Of-Line
 
 For this problem, we care mainly about inline methods which contain `BSLS_ASSERT_SAFE` checks.
+
+[Here's](./methodSizes.md) a summary of inline methods in string, hashtable, and vector, with the size of the program code (minus whitespace and comments) and the number of safe asserts in each method.
 
 ####Move Common SAFE Asserts and Sets of SAFE Asserts Into Out-Of-Line Private Methods
 
