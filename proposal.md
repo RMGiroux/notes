@@ -8,7 +8,7 @@ When building very large applications, enabling `BSLS_ASSERT_SAFE` causes the te
 
 There are several different ways we can seek to address this problem.
 
-###Move Common SAFE Asserts and Sets of SAFE Asserts Into Out-Of-Line Private Methods
+####Move Common SAFE Asserts and Sets of SAFE Asserts Into Out-Of-Line Private Methods
 
 
 
