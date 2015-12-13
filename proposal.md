@@ -13,7 +13,7 @@ There are several different ways we can seek to address this problem.
 For this problem, we care mainly about inline methods which contain `BSLS_ASSERT_SAFE` checks.
 
 | Title          | Count                |
-+:---------------|---------------------:|
+|:---------------|---------------------:|
 | "This may be   |         3 |
 | a multiline entry| |
 
