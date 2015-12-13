@@ -15,9 +15,12 @@ while(<>) {
     my $filename = $ARGV;
     my $filetext = $_;
 
-    print "==============================\n";
-    print "==  $filename\n";
-    print "==============================\n";
+    print "###### $filename\n";
+
+    print "\n";
+
+    print "| Method Name | Approx Body Size | SAFE Assert Count |\n";
+    print "|:------------|-----------------:|------------------:|\n";
 
     while($filetext=~m!^inline([^{]+)^{(.*?)^}!gms) {
         my $signature = $1;
@@ -35,7 +38,16 @@ while(<>) {
 
         chomp $signature;
 
-        print "$signature\t$bodySize\t$safe_assert_count\n";
+        $signature=~s{\n}{ }g;
+        $signature=~s{\s+}{ }gms;
+        $signature=~s{ : (.*)}{}gms;
+
+        $bodySize+=length($1) if $1;
+
+        print "| `$signature` | $bodySize | $safe_assert_count |\n";
+        #print "\n\n<<<<<\n";
+        #print "$body\n";
+        #print ">>>>>>>\n\n";
     }
 }
 
