@@ -8,7 +8,18 @@ When building very large applications, enabling `BSLS_ASSERT_SAFE` causes the te
 
 There are several different ways we can seek to address this problem.
 
+####Make More Methods in Commonly Used Components Out-Of-Line
+
+For this problem, we care mainly about inline methods which contain `BSLS_ASSERT_SAFE` checks.
+
+| Title          | Count                |
++:---------------|---------------------:|
+| "This may be   |         3 |
+| a multiline entry| |
+
 ####Move Common SAFE Asserts and Sets of SAFE Asserts Into Out-Of-Line Private Methods
+
+##Avenues of Research
 
 
 
