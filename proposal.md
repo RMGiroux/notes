@@ -88,7 +88,9 @@ There are several different ways we can seek to address this problem.
 
 For this problem, we care mainly about inline methods which contain `BSLS_ASSERT_SAFE` checks.
 
-[Here's](./methodSizes.md) a summary of inline methods in string, hashtable, and vector, with the size of the program code (minus whitespace and comments) and the number of safe asserts in each method.
+[Here's](./methodSizes.md) a summary of inline methods in `string`, `hashtable`, and `vector`, with the size of the *source* code (minus whitespace and comments) and the number of safe asserts in each method. Ideally, we'd like to collect the resulting text size for each function, but for template classes like `vector` or `hashtable` this is a tricky concept.
+
+
 
 ####Move Common SAFE Asserts and Sets of SAFE Asserts Into Out-Of-Line Private Methods
 
@@ -128,6 +130,10 @@ $ grep 'BSLS_ASSERT_SAFE' bslstl_vector.h bslstl_string.h bslstl_hashtable.h bsl
 
 ##Avenues of Research
 
+1. Investigate how frequently each inline method in bde and bde-classic is used.
 
+2. Investigate the resulting text size of each inline method for common template types (or, for `string`, just for `char`).
+
+3. Find a way to benchmark the impact of removing inline from "hot" methods on our common platforms, with and without optimization.  (Note that Bloomberg builds code internally with inlining on, even in debug builds).
 
 
